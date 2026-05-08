@@ -98,7 +98,7 @@ data:
 
 1. 导入蓝图：HA → 设置 → 自动化与场景 → ⋮ → 导入蓝图 → 粘贴
    ```
-   https://raw.githubusercontent.com/guitarzsr/pushplus-HA/master/blueprints/automation/pushplus/pushplus_event_push.yaml
+   https://cdn.jsdelivr.net/gh/guitarzsr/pushplus-HA@master/blueprints/automation/pushplus/pushplus_event_push.yaml
    ```
 2. 蓝图列表中选择「PushPlus 通用推送」→ 创建自动化
 3. 选择触发条件（如定时、设备状态变更、事件等）
