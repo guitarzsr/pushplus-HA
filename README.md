@@ -141,15 +141,31 @@ actions:
 
 ## 📝 更新日志
 
+### v2.0.3
+- Rewrite `__init__.py`: direct notify service registration (bypass EntityComponent)
+- Add `integration_type: service` to manifest
+- Remove all dead imports
+
+### v2.0.2
+- Remove token validation API call on config save
+- Upgrade endpoint to HTTPS
+- Rate-limit auto-reset after 300s
+- Replace requests with aiohttp
+- Add `translations/en.json`
+
+### v2.0.1
+- Add channel & option support
+- Add smart error handling (14 error codes)
+- Add HD icon (1024px source)
+
 ### v2.0.0
-- ✨ 新增配置 UI（Config Flow），无需编辑 YAML
-- ✨ 新增 9 种发送渠道路由支持
-- ✨ 新增多渠道配置编码（option）字段
-- ✨ 新增完整中文翻译
-- ✨ 新增智能错误处理（限流退避、错误码中文翻译）
-- ✨ 新增 Blueprint 蓝图（系统通知自动推送）
-- 🔧 POST 替代 GET，JSON Body 更安全规范
-- 🔧 最低 HA 版本要求：2024.1.0
+- Config Flow UI (no more YAML editing)
+- 9 send channel routing
+- Complete zh-Hans + en translations
+- Smart error handling with rate-limit backoff
+- Blueprint for system notification forwarding
+- POST + JSON body (replaces GET + query string)
+- Min HA version: 2024.1.0
 
 ### v1.3
 - 初始版本（仅 YAML 配置）

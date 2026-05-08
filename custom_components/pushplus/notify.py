@@ -49,6 +49,14 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 )
 
 
+async def async_setup_entry(
+    hass: HomeAssistant,
+    config_entry: Any,
+) -> bool:
+    """Set up PushPlus notify from a config entry."""
+    return True
+
+
 def get_service(
     hass: HomeAssistant,
     config: dict[str, Any],
