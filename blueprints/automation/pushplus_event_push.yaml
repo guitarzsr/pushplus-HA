@@ -1,0 +1,32 @@
+blueprint:
+  name: "PushPlus 通用推送"
+  description: "选择任意触发条件，通过 PushPlus 推送通知（标题+内容可自定义模板）"
+  domain: automation
+  input:
+    trigger_event:
+      name: "触发条件"
+      description: "选择触发推送的条件（支持多选适配）"
+      selector:
+        trigger: {}
+    notify_title:
+      name: "推送标题"
+      description: "支持 Jinja 模板，如 {{ states('sensor.temperature') }}"
+      default: "HA 通知"
+      selector:
+        text:
+          multiline: false
+    notify_message:
+      name: "推送内容"
+      description: "支持 Jinja 模板引用触发数据"
+      default: "触发时间: {{ now().strftime('%H:%M:%S') }}"
+      selector:
+        text:
+          multiline: true
+mode: parallel
+max_exceeded: silent
+triggers: !input trigger_event
+actions:
+  - action: notify.pushplus
+    data:
+      title: !input notify_title
+      message: !input notify_message
