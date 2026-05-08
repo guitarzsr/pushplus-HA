@@ -97,11 +97,12 @@ data:
 适合在 HA 界面中灵活配置触发条件和推送模板，无需写 YAML。
 
 1. [下载蓝图文件](https://github.com/guitarzsr/pushplus-HA/raw/master/blueprints/automation/pushplus/pushplus_event_push.yaml)
-2. HA → 设置 → 自动化与场景 → ⋮ → 导入蓝图 → 粘贴 → 把下载的 YAML 内容贴进去
-3. 蓝图列表中选择「PushPlus 通用推送」→ 创建自动化
-4. 选择触发条件（如定时、设备状态变更、事件等）
-5. 填写推送标题和内容（支持 Jinja 模板）
-6. 保存后手动「立即运行」测试
+2. 将文件放入 HA 配置目录：`config/blueprints/automation/pushplus/pushplus_event_push.yaml`（不存在则新建目录）
+3. 重载 HA 蓝图（开发者工具 → YAML → 重载蓝图自动化）
+4. HA → 设置 → 自动化与场景 → 创建自动化 → 选择「PushPlus 通用推送」蓝图
+5. 选择触发条件（如定时、设备状态变更、事件等）
+6. 填写推送标题和内容（支持 Jinja 模板）
+7. 保存后手动「立即运行」测试
 
 ### 方式三：系统通知接管（零配置，≈ Unraid 效果）
 
