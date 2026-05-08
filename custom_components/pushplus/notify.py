@@ -10,7 +10,6 @@ import aiohttp
 import voluptuous as vol
 
 from homeassistant.components.notify import (
-    ATTR_MESSAGE,
     ATTR_TITLE,
     PLATFORM_SCHEMA,
     BaseNotificationService,
@@ -30,7 +29,6 @@ from .const import (
     DEFAULT_CHANNEL,
     DEFAULT_NAME,
     DEFAULT_TEMPLATE,
-    DOMAIN,
     ERROR_CODES,
     RATE_LIMIT_RESET_SECONDS,
     REQUEST_TIMEOUT,

@@ -13,7 +13,6 @@ import homeassistant.helpers.config_validation as cv
 
 from .const import (
     CHANNEL_LABELS,
-    CHANNELS,
     CHANNELS_NEED_OPTION,
     CONF_CHANNEL,
     CONF_OPTION,
@@ -26,7 +25,6 @@ from .const import (
     DOMAIN,
     MIN_TOKEN_LENGTH,
     TEMPLATE_LABELS,
-    TEMPLATES,
 )
 
 _LOGGER = logging.getLogger(__name__)

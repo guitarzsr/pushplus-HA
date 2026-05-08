@@ -158,5 +158,7 @@ actions:
 
 欢迎提 Issue 和 PR。
 
+本仓库代码由 **DeepSeek V4 Pro** 生成，**GLM 5.1** 进行代码审查。
+
 [badge_github_release_version]: https://img.shields.io/github/v/release/wubin2/pushplus?style=for-the-badge&label=release
 [github_release_link]: https://github.com/wubin2/pushplus/releases
