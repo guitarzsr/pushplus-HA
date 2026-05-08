@@ -1,0 +1,39 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "PushPlus",
+        "description": "Enter your PushPlus configuration.\n\nGet Token: pushplus.plus → Personal Center → Get Token\n\n[📖 PushPlus API Documentation](https://www.pushplus.plus/doc/guide/api.html)",
+        "data": {
+          "name": "Name",
+          "token": "Token",
+          "template": "Message Template",
+          "channel": "Send Channel",
+          "topic": "Group Code (optional)",
+          "option": "Channel Config Code (optional)"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "This token+channel combination is already configured."
+    },
+    "error": {
+      "invalid_token": "Invalid token or network error."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "PushPlus Options",
+        "data": {
+          "token": "Token",
+          "template": "Message Template",
+          "channel": "Send Channel",
+          "topic": "Group Code (optional)",
+          "option": "Channel Config Code (optional)"
+        },
+        "description": "Modify PushPlus configuration\n\n[📖 PushPlus Docs](https://www.pushplus.plus/doc/guide/api.html)"
+      }
+    }
+  }
+}

@@ -5,6 +5,6 @@
   "documentation": "https://github.com/guitarzsr/pushplus-HA",
   "issue_tracker": "https://github.com/guitarzsr/pushplus-HA/issues",
   "codeowners": ["@guitarzsr"],
-  "version": "2.0.1",
+  "version": "2.0.2",
   "iot_class": "cloud_push"
 }

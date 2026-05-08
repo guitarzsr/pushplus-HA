@@ -14,7 +14,6 @@ DEFAULT_NAME: Final = "PushPlus"
 DEFAULT_CHANNEL: Final = "wechat"
 
 API_ENDPOINT: Final = "https://www.pushplus.plus/send"
-API_BATCH_ENDPOINT: Final = "https://www.pushplus.plus/batchSend"
 
 DOC_URL: Final = "https://www.pushplus.plus/doc/guide/api.html"
 DOC_CHANNEL_URL: Final = "https://www.pushplus.plus/doc/channel/"

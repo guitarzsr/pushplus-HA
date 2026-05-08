@@ -1,11 +1,9 @@
 """Config flow for PushPlus integration."""
 from __future__ import annotations
 
-import asyncio
 import logging
 from typing import Any
 
-import aiohttp
 import voluptuous as vol
 
 from homeassistant import config_entries
@@ -14,7 +12,6 @@ from homeassistant.data_entry_flow import FlowResult
 import homeassistant.helpers.config_validation as cv
 
 from .const import (
-    API_ENDPOINT,
     CHANNEL_LABELS,
     CHANNELS,
     CHANNELS_NEED_OPTION,
@@ -28,18 +25,11 @@ from .const import (
     DOC_URL,
     DOMAIN,
     MIN_TOKEN_LENGTH,
-    REQUEST_TIMEOUT,
     TEMPLATE_LABELS,
     TEMPLATES,
 )
 
 _LOGGER = logging.getLogger(__name__)
-
-_DESCRIPTION_TEMPLATE = (
-    "输入 PushPlus 推送配置。\n\n"
-    "Token 获取：登录 pushplus.plus → 个人中心 → 获取 Token\n\n"
-    "[📖 PushPlus 消息接口文档]({doc_url})"
-).format(doc_url=DOC_URL)
 
 
 def _build_schema(user_input: dict[str, Any] | None = None) -> vol.Schema:
@@ -66,40 +56,6 @@ def _build_schema(user_input: dict[str, Any] | None = None) -> vol.Schema:
     return vol.Schema(schema)
 
 
-async def _validate_token(token: str) -> tuple[bool, str]:
-    """Validate PushPlus token by making a test API call.
-
-    Returns (is_valid, error_message).
-    """
-    payload = {
-        "token": token,
-        "title": "Home Assistant 验证",
-        "content": "PushPlus integration validation",
-        "template": "txt",
-    }
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.post(
-                API_ENDPOINT,
-                json=payload,
-                headers={"Content-Type": "application/json"},
-                timeout=aiohttp.ClientTimeout(total=REQUEST_TIMEOUT),
-            ) as response:
-                data = await response.json()
-                code = data.get("code", -1)
-                if code == 200:
-                    return True, ""
-                if code == 903:
-                    return False, "Token 无效"
-                if code == 905:
-                    return False, "账户未实名认证"
-                return False, data.get("msg", f"错误码 {code}")
-    except asyncio.TimeoutError:
-        return False, "连接超时"
-    except aiohttp.ClientError as err:
-        return False, f"网络错误：{err}"
-
-
 class PushPlusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for PushPlus."""
 
@@ -118,18 +74,11 @@ class PushPlusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors[CONF_TOKEN] = f"Token 长度至少 {MIN_TOKEN_LENGTH} 位"
 
             if not errors:
-                is_valid, err_msg = await _validate_token(token)
-                if not is_valid:
-                    errors[CONF_TOKEN] = err_msg
-
-            if not errors:
                 channel = user_input.get(CONF_CHANNEL, DEFAULT_CHANNEL)
                 template = user_input.get(CONF_TEMPLATE, DEFAULT_TEMPLATE)
 
                 if CONF_OPTION not in user_input:
-                    user_input[CONF_OPTION] = (
-                        "" if channel not in CHANNELS_NEED_OPTION else ""
-                    )
+                    user_input[CONF_OPTION] = ""
 
                 user_input[CONF_TOKEN] = token
 
