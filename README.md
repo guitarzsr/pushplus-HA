@@ -22,9 +22,9 @@
 
 ### 方式一：HACS（推荐）
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=wubin2&repository=pushplus&category=Integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=guitarzsr&repository=pushplus-HA&category=Integration)
 
-1. HACS → 自定义仓库 → 添加 `https://github.com/wubin2/pushplus`
+1. HACS → 自定义仓库 → 添加 `https://github.com/guitarzsr/pushplus-HA`
 2. 搜索 "PushPlus" 并安装
 3. 重启 Home Assistant
 
@@ -158,7 +158,9 @@ actions:
 
 欢迎提 Issue 和 PR。
 
+Fork 自 [wubin2/pushplus](https://github.com/wubin2/pushplus)（v1.3 原版），v2.0 起独立维护。
+
 本仓库代码由 **DeepSeek V4 Pro** 生成，**GLM 5.1** 进行代码审查。
 
-[badge_github_release_version]: https://img.shields.io/github/v/release/wubin2/pushplus?style=for-the-badge&label=release
-[github_release_link]: https://github.com/wubin2/pushplus/releases
+[badge_github_release_version]: https://img.shields.io/github/v/release/guitarzsr/pushplus-HA?style=for-the-badge&label=release
+[github_release_link]: https://github.com/guitarzsr/pushplus-HA/releases
