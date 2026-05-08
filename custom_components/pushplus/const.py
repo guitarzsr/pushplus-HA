@@ -13,11 +13,16 @@ DEFAULT_TEMPLATE: Final = "html"
 DEFAULT_NAME: Final = "PushPlus"
 DEFAULT_CHANNEL: Final = "wechat"
 
-API_ENDPOINT: Final = "http://www.pushplus.plus/send"
-API_BATCH_ENDPOINT: Final = "http://www.pushplus.plus/batchSend"
+API_ENDPOINT: Final = "https://www.pushplus.plus/send"
+API_BATCH_ENDPOINT: Final = "https://www.pushplus.plus/batchSend"
 
 DOC_URL: Final = "https://www.pushplus.plus/doc/guide/api.html"
 DOC_CHANNEL_URL: Final = "https://www.pushplus.plus/doc/channel/"
+
+REQUEST_TIMEOUT: Final = 10
+MIN_TOKEN_LENGTH: Final = 16
+
+RATE_LIMIT_RESET_SECONDS: Final = 300
 
 TEMPLATES: Final = ["html", "txt", "json", "markdown"]
 
@@ -28,17 +33,7 @@ TEMPLATE_LABELS: Final = {
     "markdown": "Markdown（markdown）",
 }
 
-CHANNELS: Final = [
-    "wechat",
-    "webhook",
-    "cp",
-    "mail",
-    "sms",
-    "voice",
-    "app",
-    "extension",
-    "clawbot",
-]
+CHANNELS: Final = ["wechat", "webhook", "cp", "mail", "sms", "voice", "app", "extension", "clawbot"]
 
 CHANNELS_NEED_OPTION: Final = ["webhook", "cp", "mail"]
 
@@ -56,14 +51,14 @@ CHANNEL_LABELS: Final = {
 
 ERROR_CODES: Final = {
     200: "请求成功",
-    302: "未登录，请检查 Token",
+    302: "未登录",
     401: "请求未授权",
     403: "IP 未授权",
-    500: "PushPlus 服务异常，请稍后重试",
-    600: "数据异常，操作失败",
+    500: "服务异常，请稍后重试",
+    600: "数据异常",
     805: "无权查看",
-    888: "积分不足，需要充值",
-    900: "请求频率过高，请减少推送频率",
+    888: "积分不足",
+    900: "请求频率过高",
     903: "无效的 Token",
     905: "账户未实名认证",
     999: "服务端验证错误",

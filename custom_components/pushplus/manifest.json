@@ -2,10 +2,9 @@
   "domain": "pushplus",
   "name": "PushPlus",
   "config_flow": true,
-  "documentation": "https://github.com/wubin2/pushplus",
-  "issue_tracker": "https://github.com/wubin2/pushplus/issues",
-  "dependencies": ["notify"],
-  "codeowners": ["@wubin2"],
-  "version": "2.0.0",
+  "documentation": "https://github.com/guitarzsr/pushplus-HA",
+  "issue_tracker": "https://github.com/guitarzsr/pushplus-HA/issues",
+  "codeowners": ["@guitarzsr"],
+  "version": "2.0.1",
   "iot_class": "cloud_push"
 }

@@ -1,11 +1,12 @@
 """PushPlus notification service."""
 from __future__ import annotations
 
+import asyncio
 import logging
 from datetime import datetime
 from typing import Any
 
-import requests
+import aiohttp
 import voluptuous as vol
 
 from homeassistant.components.notify import (
@@ -31,6 +32,8 @@ from .const import (
     DEFAULT_TEMPLATE,
     DOMAIN,
     ERROR_CODES,
+    RATE_LIMIT_RESET_SECONDS,
+    REQUEST_TIMEOUT,
     TEMPLATES,
 )
 
@@ -64,12 +67,6 @@ def get_service(
     )
 
 
-def _format_error(code: int, msg: str) -> str:
-    """Format PushPlus error with Chinese description."""
-    desc = ERROR_CODES.get(code, f"未知错误")
-    return f"PushPlus 返回错误 code={code}：{desc}（{msg}）"
-
-
 class PushPlusNotificationService(BaseNotificationService):
     """Implement the notification service for PushPlus."""
 
@@ -89,19 +86,33 @@ class PushPlusNotificationService(BaseNotificationService):
         self._template = template
         self._channel = channel
         self._option = option
-        self._rate_limited = False
+        self._rate_limited_until: float | None = None
 
     def send_message(self, message: str = "", **kwargs: Any) -> None:
-        """Send a message to PushPlus."""
+        """Send a message to PushPlus (called in executor by HA)."""
+        asyncio.run_coroutine_threadsafe(
+            self.async_send_message(message, **kwargs),
+            self.hass.loop,
+        ).result()
+
+    async def async_send_message(self, message: str = "", **kwargs: Any) -> None:
+        """Send a message to PushPlus asynchronously."""
         title = kwargs.get(ATTR_TITLE)
 
         if not title:
             _LOGGER.error("PushPlus: 标题不能为空")
             return
 
-        if self._rate_limited:
-            _LOGGER.warning("PushPlus: 已被限流，跳过本次推送")
-            return
+        if self._rate_limited_until is not None:
+            now_ts = datetime.now().timestamp()
+            if now_ts < self._rate_limited_until:
+                remaining = int(self._rate_limited_until - now_ts)
+                _LOGGER.warning(
+                    "PushPlus: 处于限流状态，%d 秒后恢复", remaining
+                )
+                return
+            self._rate_limited_until = None
+            _LOGGER.info("PushPlus: 限流已解除，恢复正常推送")
 
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         content = f"{now} {message}"
@@ -121,25 +132,24 @@ class PushPlusNotificationService(BaseNotificationService):
             payload["option"] = self._option
 
         try:
-            response = requests.post(
-                API_ENDPOINT,
-                json=payload,
-                headers={"Content-Type": "application/json"},
-                timeout=10,
-            )
-            response.raise_for_status()
-        except requests.Timeout:
-            _LOGGER.error("PushPlus: 请求超时（10秒）")
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    API_ENDPOINT,
+                    json=payload,
+                    headers={"Content-Type": "application/json"},
+                    timeout=aiohttp.ClientTimeout(total=REQUEST_TIMEOUT),
+                ) as response:
+                    response.raise_for_status()
+                    data = await response.json()
+        except asyncio.TimeoutError:
+            _LOGGER.error("PushPlus: 请求超时（%d 秒）", REQUEST_TIMEOUT)
             return
-        except requests.ConnectionError:
+        except aiohttp.ClientConnectorError:
             _LOGGER.error("PushPlus: 无法连接到 pushplus.plus，请检查网络")
             return
-        except requests.RequestException as err:
+        except aiohttp.ClientError as err:
             _LOGGER.error("PushPlus: 请求异常：%s", err)
             return
-
-        try:
-            data = response.json()
         except ValueError:
             _LOGGER.error("PushPlus: 响应不是有效的 JSON")
             return
@@ -151,9 +161,26 @@ class PushPlusNotificationService(BaseNotificationService):
             short_code = data.get("data", "")
             _LOGGER.debug("PushPlus 消息已提交，流水号: %s", short_code)
         elif code == 900:
-            self._rate_limited = True
-            _LOGGER.error(_format_error(code, msg))
+            self._rate_limited_until = (
+                datetime.now().timestamp() + RATE_LIMIT_RESET_SECONDS
+            )
+            _LOGGER.error(
+                "PushPlus 返回限流 code=%d：%s，将暂停推送 %d 秒",
+                code,
+                ERROR_CODES.get(code, msg),
+                RATE_LIMIT_RESET_SECONDS,
+            )
         elif code == 903:
-            _LOGGER.error(_format_error(code, msg) + "，请检查 Token 是否正确")
+            _LOGGER.error(
+                "PushPlus 返回错误 code=%d：%s（%s），请检查 Token 是否正确",
+                code,
+                ERROR_CODES.get(code, "未知错误"),
+                msg,
+            )
         else:
-            _LOGGER.error(_format_error(code, msg))
+            _LOGGER.error(
+                "PushPlus 返回错误 code=%d：%s（%s）",
+                code,
+                ERROR_CODES.get(code, "未知错误"),
+                msg,
+            )
