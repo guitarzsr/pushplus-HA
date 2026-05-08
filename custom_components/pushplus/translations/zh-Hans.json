@@ -1,0 +1,39 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "PushPlus",
+        "description": "输入 PushPlus 推送配置。\n\nToken 获取：登录 pushplus.plus → 个人中心 → 获取 Token\n\n[📖 PushPlus 消息接口文档](https://www.pushplus.plus/doc/guide/api.html)",
+        "data": {
+          "name": "名称",
+          "token": "Token",
+          "template": "消息模板",
+          "channel": "发送渠道",
+          "topic": "群组编码（可选）",
+          "option": "渠道配置编码（可选）"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "该 Token+渠道组合已配置。"
+    },
+    "error": {
+      "invalid_token": "Token 无效或网络错误。"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "PushPlus 选项",
+        "data": {
+          "token": "Token",
+          "template": "消息模板",
+          "channel": "发送渠道",
+          "topic": "群组编码（可选）",
+          "option": "渠道配置编码（可选）"
+        },
+        "description": "修改 PushPlus 配置\n\n[📖 PushPlus 文档](https://www.pushplus.plus/doc/guide/api.html)"
+      }
+    }
+  }
+}
