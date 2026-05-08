@@ -77,7 +77,11 @@ notify:
 
 ## 🚀 使用
 
-### 自动化中调用
+集成提供三种推送方式，按需选择：
+
+### 方式一：直接调用服务（精确控制）
+
+适合自动化/脚本中写死推送内容，如门铃、漏水告警等固定场景。
 
 ```yaml
 action: notify.pushplus
@@ -86,9 +90,26 @@ data:
   message: "前门有人按门铃"
 ```
 
-### HA 系统通知自动推送
+**测试**：开发者工具 → 动作 → `notify.pushplus` → 填 title + message → 调用。
 
-复制以下自动化到 HA，所有系统通知（组件报错、集成离线等）自动推送：
+### 方式二：蓝图（GUI 可视化）
+
+适合在 HA 界面中灵活配置触发条件和推送模板，无需写 YAML。
+
+1. 导入蓝图：HA → 设置 → 自动化与场景 → ⋮ → 导入蓝图 → 粘贴
+   ```
+   https://raw.githubusercontent.com/guitarzsr/pushplus-HA/master/blueprints/automation/pushplus/pushplus_event_push.yaml
+   ```
+2. 蓝图列表中选择「PushPlus 通用推送」→ 创建自动化
+3. 选择触发条件（如定时、设备状态变更、事件等）
+4. 填写推送标题和内容（支持 Jinja 模板）
+5. 保存后手动「立即运行」测试
+
+### 方式三：系统通知接管（零配置，≈ Unraid 效果）
+
+所有 HA 系统通知（集成离线、组件报错等）自动推送到微信。
+
+复制以下自动化到 HA：
 
 ```yaml
 alias: "📢 系统通知 → PushPlus"
@@ -106,9 +127,15 @@ actions:
       message: "{{ trigger.event.data.service_data.message | default('') }}"
 ```
 
-### Blueprint 蓝图（自定义事件推送）
+**测试**：开发者工具 → 动作 → `persistent_notification.create` → 填 title + message → 调用。
 
-将 [`pushplus-event-blueprint.yaml`](pushplus-event-blueprint.yaml) 放入 `blueprints/automation/`，然后在 HA 自动化页面选择「PushPlus 通用推送」蓝图，通过 GUI 选择任意触发条件和推送内容。
+### 方式对比
+
+| 方式 | 配置难度 | 灵活度 | 适用场景 |
+|---|---|---|---|
+| 直接调用 | 低 | 中 | 固定通知（门铃、漏水） |
+| 蓝图 | 中 | 高 | GUI 可视化配置，支持模板 |
+| 系统接管 | 低 | 低 | HA 报错自动推送，零维护 |
 
 ## 📖 发送渠道说明
 
